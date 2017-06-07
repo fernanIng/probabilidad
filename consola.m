@@ -22,7 +22,7 @@ function varargout = consola(varargin)
 
 % Edit the above text to modify the response to help consola
 
-% Last Modified by GUIDE v2.5 04-Jun-2017 21:25:41
+% Last Modified by GUIDE v2.5 07-Jun-2017 19:58:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -101,51 +101,90 @@ function PAR_Callback(hObject, eventdata, handles)
 % hObject    handle to PAR (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
+%Recogemos los valores por consola del dinero con el que comenzamos y el
+%dinero con el que dejariamos de ganar 
 
-if A >= B
-    dinero=[];
-    dinero(1)=A;
-	plot(dinero)
-    set(handles.resultado,'string',num2str(0));
-    set(handles.dineroFinal,'string',num2str(A));
-else        
-    dineroF=0;
-    gano=0;
-    dinero=[];
-    dinero(1)=A;
-    iter=2;
+if(A >= B)
+    errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
+    %Salta un mensaje de error si nuestro objetivo no es mayor que la
+    %cantidad con la que comenzamos
+    
+else
+    %si los datos son correctos empezamos el preceso
+    %inicializamos valores
+    dineroF = 0;
+    gano = 0;
+    dinero = [];
+    %dinero es un array con el dinero que tenemos en cada iteracción
+    
+    dinero(1) = A;
+    iter = 2;
     disp('Apostando a Rojo/Negro Par/Impar')
 
-    while(dinero>0)
-
-        dinero(iter)=dinero(iter-1)-1;
-        aleatorio=randi(37);
+    while(dinero > 0)
+        %bucle hasta que se nos acabe el dinero o llge al breack debido a
+        %que ganamos la cantidad necesaria
+        
+        dinero(iter) = dinero(iter-1)-1;
+        %restamos a la cantidad de dinero de esta iterración la apuesta que
+        %es 1
+        
+        aleatorio = randi(37);
+        %aleatorio con las 37 números posibles de la ruleta
+        
         if aleatorio <= 18
-            dinero(iter)=dinero(iter)+2;
+            %la posibilidad de ganar son 18 de 37, si entra gana
+            
+            dinero(iter) = dinero(iter) + 2;
+            %los beneficios son 2
         end
 
-        if(dinero(iter)>=B)
-            %objetivo ganr 20$
+        if(dinero(iter) >= B)
+            %si el dinero de esta iteracción  es igual o mayor que B hemos
+            %llegago a nuestro objetivo
+            
             gano = 1;
+            %marcamos que el jugador a ganado poniendo gano a 1
+            
             dineroF=dinero(iter);
+            %guardamos en dineroF la cantidad de dinero en esta
+            %iteracción
+            
             break
+            %salimos del while
         end
 
         iter = iter+1;
+        %cada pasa por el while avanzamos una iteracción, es una jugada
     end
 
     if(gano == 0)
-           dineroF = dinero(iter-1);
+        %si no gano, el dineroF sera el de la iteracción antes de
+        %salirse del bucle
+        dineroF = dinero(iter-1);
+        
+        set(handles.situacionFin,'string','PERDEDOR');
+        %devuelve por pantalla si perdimos
+        
+     else
+        set(handles.situacionFin,'string','GANADOR');
+        %devuelve por pantalla si ganamos
     end
 
-    iter
     plot(dinero)
+    %nos da la grafica de las iteraciones y como ha avnzado nuestro dinero
 
     set(handles.resultado,'string',num2str(iter));
     set(handles.dineroFinal,'string',num2str(dineroF));
+    %Nos devuelve por pantalla las iteraciones transcurridas y el dinero
+    %con el que acabamos
+
 end
+
+
 
 function resultado_Callback(hObject, eventdata, handles)
 % hObject    handle to resultado (see GCBO)
@@ -157,6 +196,7 @@ function resultado_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
+
 function resultado_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to resultado (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -174,44 +214,75 @@ function docena_Callback(hObject, eventdata, handles)
 % hObject    handle to docena (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
+%Recogemos los valores por consola del dinero con el que comenzamos y el
+%dinero con el que dejariamos de ganar 
 
-dineroF=0;
-gano=0;
-dinero=[];
-dinero(1)=A;
-iter=2;
-disp('Apostando a las docenas')
-%docenas
-while(dinero>0)
-                
-    aleatorio=randi(37);
-    if aleatorio <= 12
-        dinero(iter)=dinero(iter-1)+2;
+if(A >= B)
+    errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
+    %Salta un mensaje de error si nuestro objetivo no es mayor que la
+    %cantidad con la que comenzamos
+    
+else
+    %si los datos son correctos empezamos el preceso
+    %inicializamos valores
+    dineroF = 0;
+    gano = 0;
+    dinero = [];
+    dinero(1) = A;
+    iter = 2;
+    disp('Apostando a las docenas')
+    
+    while(dinero > 0)
+
+        aleatorio = randi(37);
+        
+        if aleatorio <= 12
+             %la posibilidad de ganar son 12 de 37, si entra gana suma 2
+            dinero(iter) = dinero(iter-1)+2;
+            
+        else
+            % si entra a perdido y pierde  1
+            dinero(iter) = dinero(iter-1)-1;
+            
+        end
+
+        if(dinero(iter) >= B)
+            %si el dinero de esta iteracción  es igual o mayor que B hemos
+            %llegago a nuestro objetivo, y saldremos del bucle
+            
+            gano = 1;
+            %ponnemos gano=1 para indicar que ha ganado
+            dineroF = dinero(iter);
+            
+            break
+            
+        end
+
+        iter = iter+1;
+         %cada pasa por el while avanzamos una iteracción, es una jugada
+    end 
+
+    if(gano == 0)
+        %entra si perdemos
+        
+        dineroF = dinero(iter-1);
+        set(handles.situacionFin,'string','PERDEDOR');
+        %devuelve por pantalla si perdimos
+        
     else
-        dinero(iter)=dinero(iter-1)-1;
+        set(handles.situacionFin,'string','GANADOR');
+        %devuelve por pantalla si ganamos   
     end
-    
-    if(dinero(iter)>=B)
-        gano = 1;
-        dineroF=dinero(iter);
-    	break
-    end
-    
-    iter = iter+1;
 
-end 
- 
-if(gano == 0)
-       dineroF = dinero(iter-1);
+    plot(dinero)
+
+    set(handles.resultado,'string',num2str(iter));
+    set(handles.dineroFinal,'string',num2str(dineroF));
 end
- 
-iter
-plot(dinero)
- 
-set(handles.resultado,'string',num2str(iter));
-set(handles.dineroFinal,'string',num2str(dineroF));
+
 
 
 
@@ -220,49 +291,88 @@ function doubleUp_Callback(hObject, eventdata, handles)
 % hObject    handle to doubleUp (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-dineroF=0;
-gano=0;
-dinero=[];
-dinero(1)=A;
-iter=2;
+if(A >= B)
+    errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
+    
+else
+    dineroF = 0;
+    gano = 0;
+    dinero = [];
+    dinero(1)= A;
+    iter = 2;
 
-duplicado = 1;
-disp('Double up')
+    apuesta = 1;
+    %contador que nos dice la cantidad a apostar y que se dúplica cada vez
+    %que perdemos
+    
+    disp('Double up')
+
+    while(dinero > 0)
+        
+        if(dinero(iter-1) < apuesta)
+            %si no podemos realizar el valor de la siguiente apuesta
+            %dejamos de jugar
             
-while(dinero>0)
-	if(dinero(iter-1)<duplicado)
-        break
-    end
-	dinero(iter)=dinero(iter-1) - duplicado;
-	aleatorio=randi(37);
-	if aleatorio <= 18
-        dinero(iter)=dinero(iter) + (duplicado*2);
-        duplicado=1;
-    else
-        duplicado=duplicado*2;
-    end
-                
-	if(dinero(iter)>=B)
-        %objetivo ganr 20$
-        gano = 1;
-        dineroF=dinero(iter);
-        break
-    end
-	iter = iter+1;
+            break
+            
+        end
+        
+        dinero(iter) = dinero(iter-1) - apuesta;
+        %restamos el valor de la apuesta a nuestro dinero
+        
+        aleatorio = randi(37);
+        
+        if aleatorio <= 18
+            %si entre nuestra apuesta es ganadora
+            
+            dinero(iter)=dinero(iter) + (apuesta*2);
+            %sumamos nuestros beneficios que son el doble de nuestra
+            %apuesta que es en valor "apuesta"
+            
+            apuesta = 1;
+            %reseteamos el valor de "apuesta" a 1
+        else
+            apuesta = apuesta * 2;
+            % si perdemos duplicamos el valor de la siguiente apuesta
+            
+        end
 
+        if(dinero(iter) >= B)
+            %salimos del bucle si llegamos a nuestro objetivo
+            gano = 1;
+            dineroF = dinero(iter);
+            break
+        end
+        
+        iter = iter+1;
+        %aumentamos la iteración
+    end
+
+    if(gano == 0)
+        %entra si perdemos
+        
+        dineroF = dinero(iter-1);
+        set(handles.situacionFin,'string','PERDEDOR');
+        %devuelve por pantalla si perdimos
+        
+    else
+        set(handles.situacionFin,'string','GANADOR');
+        %devuelve por pantalla si ganamos
+    end 
+
+    
+    plot(dinero)
+    %gráfica
+    set(handles.resultado,'string',num2str(iter));
+    set(handles.dineroFinal,'string',num2str(dineroF));
+    %devolvemos los valores por pantalla
 end
 
-if(gano == 0)
-       dineroF = dinero(iter-1);
-end 
 
-iter
-plot(dinero)
-set(handles.resultado,'string',num2str(iter));
-set(handles.dineroFinal,'string',num2str(dineroF));
 
 
 
@@ -274,44 +384,85 @@ function GrandMartingale_Callback(hObject, eventdata, handles)
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-dineroF=0;
-gano=0;
-dinero=[];
-dinero(1)=A;
-iter=2;
+if(A >= B)
+    errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
+    
+else
+    dineroF = 0;
+    gano = 0;
+    dinero = [];
+    dinero(1) = A;
+    iter = 2;
 
-duplicado = 1;
-            disp('The Grand Martingale Strategy.')
-while(dinero>0)
-	if(dinero(iter-1)<duplicado)
-        break
+    apuesta = 1;
+    %contador que nos dice la cantidad a apostar y que se dúplica y se 
+    %añade una unidad cada vez que perdemos
+    
+    disp('The Grand Martingale Strategy.')
+    
+    while(dinero > 0)
+        
+        if(dinero(iter-1) < apuesta)
+            %si no podemos realizar el valor de la siguiente apuesta
+            %dejamos de jugar
+       
+            break
+        end
+        
+        dinero(iter) = dinero(iter-1) - apuesta;
+        %restamos el valor de la apuesta a nuestro dinero
+     
+        aleatorio = randi(37);
+        
+        if aleatorio <= 18
+            %si entre nuestra apuesta es ganadora
+            
+            dinero(iter) = dinero(iter) + (apuesta*2);
+            %sumamos nuestros beneficios que son el doble de nuestra
+            %apuesta que es en valor "apuesta"
+            
+            apuesta = 1;
+            %reseteamos el valor de "apuesta" a 1
+        else
+            apuesta = (apuesta*2)+1;
+            % si perdemos duplicamos el valor y le sumamos una unidad
+            
+        end
+
+        if(dinero(iter) >= B)
+            %salimos si llegamos a nuestro objetivo
+            
+            gano = 1;
+            dineroF = dinero(iter);
+            break
+            
+        end
+        iter = iter+1;
+        %indicador de iteracciones
+
     end
-	dinero(iter)=dinero(iter-1) - duplicado;
-	aleatorio=randi(37);
-	if aleatorio <= 18
-        dinero(iter)=dinero(iter) + (duplicado*2);
-        duplicado=1;
+
+    if(gano == 0)
+        %entra si perdimos
+        dineroF = dinero(iter-1);
+        set(handles.situacionFin,'string','PERDEDOR');
+        %devuelve por pantalla si perdimos
+        
     else
-        duplicado=(duplicado*2)+1;
-    end
-                
-	if(dinero(iter)>=B)
-        gano = 1;
-        dineroF=dinero(iter);
-        break
-    end
-	iter = iter+1;
+        set(handles.situacionFin,'string','GANADOR');
+        %devuelve por pantalla si ganamos
+        
+    end 
 
+    plot(dinero)
+    %gráfica
+    
+    set(handles.resultado,'string',num2str(iter));
+    set(handles.dineroFinal,'string',num2str(dineroF));
+    %devolvemos valores por pantalla
 end
 
-if(gano == 0)
-       dineroF = dinero(iter-1);
-end 
 
-iter
-plot(dinero)
-set(handles.resultado,'string',num2str(iter));
-set(handles.dineroFinal,'string',num2str(dineroF));
 
 
 % --- Executes on button press in jamesBond.
@@ -319,58 +470,109 @@ function jamesBond_Callback(hObject, eventdata, handles)
 % hObject    handle to jamesBond (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-dineroF=0;
-dinero=[];
-dinero(1)=A;
-iter=2;
-gano=0;
-
-disp('James Bond Roulette Strategy.')
-%requiere un minimo de 200$ por apuesta
-duplicado = 1;
-while(dinero>=200*duplicado)
-	aleatorio=randi(37);
-	if aleatorio >= 19 && aleatorio <= 36
-        disp('de 19 a 36 -----apostamos 140$      multiplica por 2')
-        dinero(iter)=dinero(iter-1) + (80*duplicado);
-        duplicado = 1;
-                    
-	elseif aleatorio >= 13 && aleatorio <= 18
-        disp('de 13 a 18 ------apostamos 50$       multiplica por 6')
-        dinero(iter)=dinero(iter-1) + (100*duplicado);
-        duplicado = 1;
-                    
-    elseif aleatorio == 37 
-        disp('si es 0 ----- apostamos 10$      multiplica por 36')
-        dinero(iter)=dinero(iter-1) + (160 * duplicado);
-        duplicado = 1;
-                    
+if(A >= B)
+    errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
+    
+else
+    if(A < 200)
+        %Para llevar a cabo esta operación es necesario al menos 200$
+        errordlg('Introduzca al menos 200$ para jugar a este modo');
+        
     else
-        dinero(iter)=dinero(iter-1) - (200 * duplicado);
-        duplicado=duplicado*2;
-    end
+        dineroF=0;
+        dinero=[];
+        dinero(1)=A;
+        iter=2;
+        gano=0;
+
+        disp('James Bond Roulette Strategy.')
+        apuesta = 1;
+        %contador que nos dice la cantidad a apostar y que se dúplica cada vez
+        %que perdemos, en este caso cada unidad en "apuesta" son 200$
+        
+        while(dinero >= 200*apuesta)
+            %esta apuesta, tiene 3 partes, simultaneas: apuesta 140$ del 19
+            %al 36, 50$ del 13 al 18 y 10$ al 0
+            aleatorio = randi(37);
+            
+            if aleatorio >= 19 && aleatorio <= 36
+                %Si entra aqui esque ha caido del 19 al 36 y ganaremos 80$ 
+                %mantenniendo los 200$
                 
-	if(dinero(iter)>=B)
-        gano = 1;
-        dineroF=dinero(iter);
-        break
-    end
-	iter = iter+1; 
+                disp('de 19 a 36 -----apostamos 140$      multiplica por 2')
+                dinero(iter) = dinero(iter-1) + (80 * apuesta);
+                %sumamos el valor gando
                 
+                apuesta = 1;
+                %reiniciamos la cantidad a apostar en la siguiente,
+                %recordamos que una unidad en apuesta son 200$
+                
+            elseif aleatorio >= 13 && aleatorio <= 18
+                %Si entra aqui esque ha caido del 13 al 18 y ganaremos 100$ 
+                %mantenniendo los 200$
+                
+                disp('de 13 a 18 ------apostamos 50$       multiplica por 6')
+                dinero(iter)=dinero(iter-1) + (100 * apuesta);
+                
+                apuesta = 1;
+                %reiniciamos la cantidad a apostar en la siguiente 
+                
+            elseif aleatorio == 37
+                %Si entra aqui esque ha caido en el 0 y ganaremos 160$ 
+                %mantenniendo los 200$
+                disp('si es 0 ----- apostamos 10$      multiplica por 36')
+                dinero(iter)=dinero(iter-1) + (160 * apuesta);
+                
+                apuesta = 1;
+                    
+            else
+                %Si entra aqui esque ha caido del 1 al 12 y perderemos los
+                %200$
+                
+                dinero(iter)=dinero(iter-1) - (200 * apuesta);
+                apuesta=apuesta*2;
+                %Duplicamos la apuesta para el siguiente juego
+                
+            end
+                
+            if(dinero(iter) >= B)
+                %salimos si llegamos a nuestro objetivo
+                
+                gano = 1;
+                dineroF = dinero(iter);
+                break 
+                
+            end
+            
+            iter = iter+1; 
+                
+        end
+
+        if(gano == 0)
+            %entra aqui si perdimos
+            
+            dineroF = dinero(iter-1);
+            %si perdimos tomamos el dinero de la anterio iteracción
+            
+            set(handles.situacionFin,'string','PERDEDOR');
+            %devuelve por pantalla si perdimos
+        else
+            set(handles.situacionFin,'string','GANADOR');
+            %devuelve por pantalla si ganamos
+        end 
+
+        
+        plot(dinero)
+
+        set(handles.resultado,'string',num2str(iter));
+        set(handles.dineroFinal,'string',num2str(dineroF));
+    end
 end
 
-if(gano == 0)
-       dineroF = dinero(iter-1);
-end 
-
-iter
-plot(dinero)
-
-set(handles.resultado,'string',num2str(iter));
-set(handles.dineroFinal,'string',num2str(dineroF));
 
 
 
@@ -410,6 +612,29 @@ function retirada_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function retirada_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to retirada (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function situacionFin_Callback(hObject, eventdata, handles)
+% hObject    handle to situacionFin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of situacionFin as text
+%        str2double(get(hObject,'String')) returns contents of situacionFin as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function situacionFin_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to situacionFin (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

@@ -106,8 +106,11 @@ A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 %Recogemos los valores por consola del dinero con el que comenzamos y el
 %dinero con el que dejariamos de ganar 
-
-if(A >= B)
+if A == 0 
+    errordlg('Introduzca un valor distinto de 0 para dinero');
+     %Salta un mensaje de error si dinero es 0
+     
+elseif(A >= B)
     errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
     %Salta un mensaje de error si nuestro objetivo no es mayor que la
     %cantidad con la que comenzamos
@@ -220,7 +223,11 @@ B = str2num(get(handles.retirada,'string'));
 %Recogemos los valores por consola del dinero con el que comenzamos y el
 %dinero con el que dejariamos de ganar 
 
-if(A >= B)
+if A == 0 
+    errordlg('Introduzca un valor distinto de 0 para dinero');
+    %Salta un mensaje de error si dinero es 0
+     
+elseif(A >= B)
     errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
     %Salta un mensaje de error si nuestro objetivo no es mayor que la
     %cantidad con la que comenzamos
@@ -295,7 +302,11 @@ function doubleUp_Callback(hObject, eventdata, handles)
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-if(A >= B)
+if A == 0 
+    errordlg('Introduzca un valor distinto de 0 para dinero');
+    %Salta un mensaje de error si dinero es 0
+     
+elseif(A >= B)
     errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
     
 else
@@ -384,7 +395,11 @@ function GrandMartingale_Callback(hObject, eventdata, handles)
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-if(A >= B)
+if A == 0 
+    errordlg('Introduzca un valor distinto de 0 para dinero');
+    %Salta un mensaje de error si dinero es 0
+     
+elseif(A >= B)
     errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
     
 else
@@ -474,7 +489,11 @@ function jamesBond_Callback(hObject, eventdata, handles)
 A = str2num(get(handles.dinero,'string'));
 B = str2num(get(handles.retirada,'string'));
 
-if(A >= B)
+if A == 0 
+    errordlg('Introduzca un valor distinto de 0 para dinero');
+    %Salta un mensaje de error si dinero es 0
+     
+elseif(A >= B)
     errordlg('Introduzca un objetivo mayor que la cantidad Inicial');
     
 else
